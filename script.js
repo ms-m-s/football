@@ -37,7 +37,9 @@ function limitMsg() {
   document.getElementsByClassName("league")[0].remove();
   document.getElementsByClassName("season")[0].remove();
   document.getElementById("standings").remove();
-  document.getElementsByTagName("hr")[0].remove();
+  if (document.getElementsByTagName("hr")[0]) {
+    document.getElementsByTagName("hr")[0].remove();
+  }
   let elt = document.createElement("div");
   let content = `We're no longer available for today.<br>Please come back tomorrow!`;
   elt.id = "limit";
