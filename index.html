@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standings</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <h1><u>Football League's Standings</u></h1>
+    <br>
+    <div class="container">
+        <div class="league">
+            <select name="" id="league" required>
+                <option value="0" selected="selected">Premier League</option>
+                <option value="1">La liga</option>
+                <option value="2">Bundesliga</option>
+                <option value="3">Serie A</option>
+                <option value="4">Ligue 1</option>
+                <option value="5">Lebanese Premier League</option>
+            </select>
+        </div>
+        <div class="season">
+            <select name="" id="season" required></select>
+        </div>
+        <table id="standings" rules="rows">
+        </table>
+    </div>
+    <script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+
+</html>
