@@ -1,13 +1,3 @@
-var myHeaders = new Headers();
-myHeaders.append("x-apisports-key", "dc973a53f2b60293a2708b9c405b6a98");
-myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
-
-const requestOptions = {
-  method: "GET",
-  headers: myHeaders,
-  redirect: "follow"
-};
-
 const url = "https://api-football-relay.onrender.com/";
 const endpoint1 = "leagues/seasons";
 const countries = ["England", "Spain", "Germany", "Italy", "France", "Lebanon"];
