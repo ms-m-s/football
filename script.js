@@ -4,7 +4,7 @@ const countries = ["England", "Spain", "Germany", "Italy", "France", "Lebanon"];
 var currentLength = 1;
 var limit = 0;
 
-fetch(url + endpoint1, requestOptions)
+fetch(url + endpoint1)
   .then(response => response.json())
   .then(data => {
     limit = checkLimit(data);
@@ -59,7 +59,7 @@ function onChange() {
     name = "Premier League";
   }
   const endpoint2 = `leagues/${name}/${countries[elt.value]}`;
-  fetch(url + endpoint2, requestOptions)
+  fetch(url + endpoint2)
     .then(response => response.json())
     .then(data => {
       limit = checkLimit(data);
@@ -70,7 +70,7 @@ function onChange() {
       } else {
         let leagueId = getLeague(data);
         const endpoint3 = `standings/${leagueId}/${season}`;
-        fetch(url + endpoint3, requestOptions)
+        fetch(url + endpoint3)
           .then(response => response.json())
           .then(data => {
             limit = checkLimit(data);
