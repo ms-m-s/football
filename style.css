@@ -10,6 +10,10 @@ h1 {
   word-spacing: 6px;
 }
 
+.hidden {
+  display: none;
+}
+
 .container {
   width: 100%;
 }
@@ -36,7 +40,7 @@ h1 {
 }
 
 #standings {
-  margin-top: 35px;
+  margin-top: 25px;
   border-collapse: collapse;
 }
 
@@ -157,13 +161,27 @@ img {
     word-spacing: 3px;
   }
 
+  .league,
+  .season {
+    display: block;
+  }
+
+  .season {
+    padding-left: 5px;
+    padding-top: 10px;
+  }
+
   .promotion {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 
   img {
     width: 15px;
     height: 15px;
+  }
+
+  #name {
+    font-size: 0.8rem;
   }
 
   .same {

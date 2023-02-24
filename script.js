@@ -1,6 +1,5 @@
 const url = "https://api-football-relay.onrender.com/";
-const endpoint1 = "leagues/seasons";
-const countries = ["England", "Spain", "Germany", "Italy", "France", "Lebanon"];
+const endpoint1 = "leagues";
 var currentLength = 1;
 var limit = 0;
 
@@ -11,7 +10,7 @@ fetch(url + endpoint1)
     if (limit == 1) {
       limitMsg();
     } else {
-      getSeason(data);
+      getLeague(data);
     }
   })
   .catch(error => alert(error));
@@ -37,28 +36,35 @@ function limitMsg() {
   document.getElementsByClassName("container")[0].appendChild(elt);
 }
 
-function getSeason(data) {
-  for (let i = 0; i < data.response.length; i++) {
-    let option = document.createElement("option");
-    option.value = data.response[i];
-    option.innerText = data.response[i];
-    if (i == data.response.length - 1) {
-      option.setAttribute("selected", "selected");
+function getLeague(data) {
+  let arr = data.response;
+  arr.sort(function (a, b) {
+    if (a.league.name < b.league.name) {
+      return -1;
     }
-    document.getElementById("season").appendChild(option);
+    if (a.league.name > b.league.name) {
+      return 1;
+    }
+    return 0;
+  });
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].league.type == "League") {
+      let option = document.createElement("option");
+      let id = arr[i].league.id;
+      let name = arr[i].league.name;
+      let country = arr[i].country.name;
+      option.value = id;
+      option.innerText = name + " - " + country;
+      document.getElementById("league").appendChild(option);
+    }
   }
-  document.getElementById("season").onchange = onChange;
-  document.getElementById("league").onchange = onChange;
+  document.getElementById("league").onchange = onChangeLeague;
+  document.getElementById("season").onchange = onChangeSeason;
 }
 
-function onChange() {
-  let season = document.getElementById("season").value;
-  let elt = document.getElementById("league");
-  let name = elt.options[elt.selectedIndex].text;
-  if (name == "Lebanese Premier League") {
-    name = "Premier League";
-  }
-  const endpoint2 = `leagues/${name}/${countries[elt.value]}`;
+function onChangeLeague() {
+  let id = document.getElementById("league").value;
+  const endpoint2 = `leagues/${id}`;
   fetch(url + endpoint2)
     .then(response => response.json())
     .then(data => {
@@ -68,47 +74,68 @@ function onChange() {
           limitMsg();
         }
       } else {
-        let leagueId = getLeague(data);
-        const endpoint3 = `standings/${leagueId}/${season}`;
-        fetch(url + endpoint3)
-          .then(response => response.json())
-          .then(data => {
-            limit = checkLimit(data);
-            if (limit == 1) {
-              if (!document.getElementById("limit")) {
-                limitMsg();
-              }
-            } else {
-              let promotion = document.getElementsByClassName("promotion");
-              while (promotion.length > 0) {
-                promotion[0].parentNode.removeChild(promotion[0]);
-              }
-              for (let i = 0; i < currentLength; i++) {
-                let team = document.getElementById("team" + i);
-                if (team) {
-                  team.remove();
-                }
-              }
-              if (elt.options[elt.selectedIndex].text == "Lebanese Premier League") {
-                for (let i = 0; i < data.response[0].league.standings.length; i++) {
-                  if (data.response[0].league.standings[i][i].group == "Premier League: Regular Season") {
-                    getTable(data, i);
-                    break;
-                  }
-                }
-              } else {
-                getTable(data, 0);
-              }
-            }
-          })
-          .catch(error => alert(error));
+        if (!document.getElementsByClassName("hidden")[0]) {
+          let elt = document.getElementById("season");
+          while (elt.options.length > 0) {
+            elt.remove(0);
+          }
+        }
+        getSeason(data);
       }
     })
     .catch(error => alert(error));
 }
 
-function getLeague(data) {
-  return data.response[0].league.id;
+function onChangeSeason() {
+  let elt = document.getElementById("league");
+  let id = elt.value;
+  let season = document.getElementById("season").value;
+  const endpoint3 = `standings/${id}/${season}`;
+  fetch(url + endpoint3)
+    .then(response => response.json())
+    .then(data => {
+      limit = checkLimit(data);
+      if (limit == 1) {
+        if (!document.getElementById("limit")) {
+          limitMsg();
+        }
+      } else {
+        let promotion = document.getElementsByClassName("promotion");
+        while (promotion.length > 0) {
+          promotion[0].parentNode.removeChild(promotion[0]);
+        }
+        for (let i = 0; i < currentLength; i++) {
+          let team = document.getElementById("team" + i);
+          if (team) {
+            team.remove();
+          }
+        }
+        let length = data.response[0].league.standings.length;
+        getTable(data, length - 1);
+      }
+    })
+    .catch(error => alert(error));
+}
+
+function getSeason(data) {
+  let elt = document.getElementById("season");
+  let option = document.createElement("option");
+  option.innerText = "Select a season: ";
+  option.setAttribute("selected", "selected");
+  option.setAttribute("disabled", "disabled");
+  elt.appendChild(option);
+  for (let i = 0; i < data.response[0].seasons.length; i++) {
+    let option = document.createElement("option");
+    let start = data.response[0].seasons[i].year;
+    let t = data.response[0].seasons[i].end;
+    let end = t.substring(0, 4);
+    option.value = start;
+    option.innerText = start + " - " + end;
+    elt.appendChild(option);
+  }
+  if (document.getElementsByClassName("hidden")[0]) {
+    document.getElementsByClassName("hidden")[0].className = "season";
+  }
 }
 
 function getTable(data, k) {

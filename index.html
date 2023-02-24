@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Standings</title>
+    <link rel="icon" href="https://cdn.pixabay.com/photo/2018/09/30/22/12/silhouette-3714836_1280.png">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -15,17 +15,12 @@
     <br>
     <div class="container">
         <div class="league">
-            <select name="" id="league" required>
-                <option value="0" selected="selected">Premier League</option>
-                <option value="1">La liga</option>
-                <option value="2">Bundesliga</option>
-                <option value="3">Serie A</option>
-                <option value="4">Ligue 1</option>
-                <option value="5">Lebanese Premier League</option>
+            <select id="league">
+                <option selected="true" disabled="true">Select a league: </option>
             </select>
         </div>
-        <div class="season">
-            <select name="" id="season" required></select>
+        <div class="hidden">
+            <select id="season"></select>
         </div>
         <table id="standings" rules="rows">
         </table>
