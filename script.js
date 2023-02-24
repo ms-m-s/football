@@ -24,7 +24,9 @@ function checkLimit(data) {
 
 function limitMsg() {
   document.getElementsByClassName("league")[0].remove();
-  document.getElementsByClassName("season")[0].remove();
+  if (document.getElementsByClassName("season")[0]) {
+    document.getElementsByClassName("season")[0].remove();
+  }
   document.getElementById("standings").remove();
   if (document.getElementsByTagName("hr")[0]) {
     document.getElementsByTagName("hr")[0].remove();
