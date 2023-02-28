@@ -1,6 +1,5 @@
-//https://api-football-relay.onrender.com/
-//http://localhost:3000/
-const url = "http://localhost:3000/";
+//const url = "http://localhost:3000/"
+const url = "https://api-football-relay.onrender.com/";
 const endpoint1 = "leagues";
 var currentLength = 1;
 var limit = 0;
@@ -55,12 +54,10 @@ function getLeague(data) {
     if (arr[i].league.type == "League") {
       let option = document.createElement("option");
       let id = arr[i].league.id;
-      //let logo = arr[i].league.logo;
       let name = arr[i].league.name;
       let country = arr[i].country.name;
-      //let flag = arr[i].country.flag;
       option.value = id;
-      option.innerText = /*`<img src="${logo}"/>` + */ country + " - " + name /* + `<img src="${flag}"/>`*/ ;
+      option.innerText = country + " - " + name;
       document.getElementById("league").appendChild(option);
     }
   }
@@ -226,15 +223,6 @@ function getTable(data, k) {
     elt.innerHTML = rp;
     document.getElementById("standings").appendChild(elt);
   }
-  /*let width = window.innerWidth;
-  let elt = document.getElementById("standings");
-  let tableWidth = elt.offsetWidth;
-  let elts = document.getElementsByClassName("info2");
-  let last5Width = width - tableWidth;
-  let per = Math.round(last5Width * 100 / width) + 10;
-  for (let i = 0; i < elts.length; i++) {
-    elts[i].style.setProperty("--last5Width", per + "%");
-  }*/
   if (!document.getElementsByTagName("hr")[0]) {
     let hr = document.createElement("hr");
     document.body.appendChild(hr);
