@@ -40,16 +40,23 @@ h1 {
 }
 
 #standings {
+  width: 100%;
   margin-top: 25px;
   border-collapse: collapse;
 }
 
 #rank {
+  width: 20px;
   text-align: center;
 }
 
 #status {
-  vertical-align: center;
+  width: 15px;
+  text-align: center;
+}
+
+#logo {
+  width: 25px;
 }
 
 img {
@@ -65,11 +72,11 @@ img {
 .info {
   width: 75px;
   height: 50px;
-  margin: auto;
 }
 
 .info2 {
-  width: var(--last5Width);
+  width: max-content;
+  white-space: nowrap;
 }
 
 #right {
@@ -77,13 +84,12 @@ img {
 }
 
 #colon {
-  width: auto;
-  margin: auto;
+  width: 5px;
+  text-align: center;
 }
 
 #left {
   text-align: left;
-  vertical-align: center;
 }
 
 .up {
