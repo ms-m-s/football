@@ -1,4 +1,6 @@
-const url = "https://api-football-relay.onrender.com/";
+//https://api-football-relay.onrender.com/
+//http://localhost:3000/
+const url = "http://localhost:3000/";
 const endpoint1 = "leagues";
 var currentLength = 1;
 var limit = 0;
@@ -40,11 +42,11 @@ function limitMsg() {
 
 function getLeague(data) {
   let arr = data.response;
-  arr.sort(function (a, b) {
-    if (a.league.name < b.league.name) {
+  arr.sort((a, b) => {
+    if (a.country.name + a.league.name < b.country.name + b.league.name) {
       return -1;
     }
-    if (a.league.name > b.league.name) {
+    if (a.country.name + a.league.name > b.country.name + b.league.name) {
       return 1;
     }
     return 0;
@@ -53,10 +55,12 @@ function getLeague(data) {
     if (arr[i].league.type == "League") {
       let option = document.createElement("option");
       let id = arr[i].league.id;
+      //let logo = arr[i].league.logo;
       let name = arr[i].league.name;
       let country = arr[i].country.name;
+      //let flag = arr[i].country.flag;
       option.value = id;
-      option.innerText = name + " - " + country;
+      option.innerText = /*`<img src="${logo}"/>` + */ country + " - " + name /* + `<img src="${flag}"/>`*/ ;
       document.getElementById("league").appendChild(option);
     }
   }
@@ -112,6 +116,7 @@ function onChangeSeason() {
             team.remove();
           }
         }
+        console.log(currentLength);
         let length = data.response[0].league.standings.length;
         getTable(data, length - 1);
       }
@@ -132,7 +137,11 @@ function getSeason(data) {
     let t = data.response[0].seasons[i].end;
     let end = t.substring(0, 4);
     option.value = start;
-    option.innerText = start + " - " + end;
+    if (start != end) {
+      option.innerText = start + " - " + end;
+    } else {
+      option.innerText = start;
+    }
     elt.appendChild(option);
   }
   if (document.getElementsByClassName("hidden")[0]) {
@@ -196,7 +205,10 @@ function getTable(data, k) {
     let gf = data.response[0].league.standings[k][i].all.goals.for;
     let ga = data.response[0].league.standings[k][i].all.goals.against;
     let diff = gf - ga;
-    let form = changeForm(data.response[0].league.standings[k][i].form);
+    let form = "N/A";
+    if (data.response[0].league.standings[k][i].form != null) {
+      form = changeForm(data.response[0].league.standings[k][i].form);
+    }
     let rp = content.replace("R", data.response[0].league.standings[k][i].rank);
     rp = rp.replace("S", status);
     rp = rp.replace("LOGO", data.response[0].league.standings[k][i].team.logo);
@@ -214,7 +226,7 @@ function getTable(data, k) {
     elt.innerHTML = rp;
     document.getElementById("standings").appendChild(elt);
   }
-  let width = window.innerWidth;
+  /*let width = window.innerWidth;
   let elt = document.getElementById("standings");
   let tableWidth = elt.offsetWidth;
   let elts = document.getElementsByClassName("info2");
@@ -222,7 +234,7 @@ function getTable(data, k) {
   let per = Math.round(last5Width * 100 / width) + 10;
   for (let i = 0; i < elts.length; i++) {
     elts[i].style.setProperty("--last5Width", per + "%");
-  }
+  }*/
   if (!document.getElementsByTagName("hr")[0]) {
     let hr = document.createElement("hr");
     document.body.appendChild(hr);
