@@ -3,10 +3,68 @@ const url = "https://api-football-relay.onrender.com/";
 const endpoint1 = "leagues";
 var currentLength = 1;
 var limit = 0;
+var userLimit = 0;
+
+const leagueHeadDown = "fa fa-sharp fa-solid fa-angle-down leagueArrowhead";
+const leagueHeadUp = "fa fa-sharp fa-solid fa-angle-up leagueArrowhead";
+const seasonHeadDown = "fa fa-sharp fa-solid fa-angle-down seasonArrowhead";
+const seasonHeadUp = "fa fa-sharp fa-solid fa-angle-up seasonArrowhead";
+
+document.addEventListener("mouseup", (event) => {
+  let leagueBtn = document.getElementById("leagueBtn");
+  let league = document.getElementById("league");
+  let leagueArrowhead = document.querySelector("#leagueBtn > i");
+  if (event.target != leagueBtn && event.target != league && event.target.parentNode != league) {
+    league.className = "hidden";
+    leagueArrowhead.className = leagueHeadDown;
+  }
+  let seasonBtn = document.getElementById("seasonBtn");
+  let season = document.getElementById("season");
+  let seasonArrowhead = document.querySelector("#seasonBtn > i");
+  if (event.target != seasonBtn && event.target != season && event.target.parentNode != season) {
+    season.className = "hidden";
+    seasonArrowhead.className = seasonHeadDown;
+  }
+});
+
+document.getElementById("leagueBtn").addEventListener("click", () => {
+  let elt = document.getElementById("league");
+  if (elt.className == "hidden") {
+    elt.className = "leagueOnClick";
+  } else {
+    elt.className = "hidden";
+  }
+  let leagueArrowhead = document.querySelector("#leagueBtn > i");
+  if (leagueArrowhead.className == leagueHeadUp) {
+    leagueArrowhead.className = leagueHeadDown;
+  } else {
+    leagueArrowhead.className = leagueHeadUp;
+  }
+});
+
+document.getElementById("seasonBtn").addEventListener("click", () => {
+  let elt = document.getElementById("season");
+  if (elt.className == "hidden") {
+    elt.className = "seasonOnClick";
+  } else {
+    elt.className = "hidden";
+  }
+  let seasonArrowhead = document.querySelector("#seasonBtn > i");
+  if (seasonArrowhead.className == seasonHeadUp) {
+    seasonArrowhead.className = seasonHeadDown;
+  } else {
+    seasonArrowhead.className = seasonHeadUp;
+  }
+});
 
 fetch(url + endpoint1)
   .then(response => response.json())
   .then(data => {
+    userLimit = checkUserLimit(data);
+    if (userLimit == 1) {
+      userLimitMsg(data);
+      return;
+    }
     limit = checkLimit(data);
     if (limit == 1) {
       limitMsg();
@@ -39,6 +97,36 @@ function limitMsg() {
   document.getElementsByClassName("container")[0].appendChild(elt);
 }
 
+function checkUserLimit(data) {
+  if (typeof data.error != "undefined") {
+    return 1;
+  }
+  return 0;
+}
+
+function userLimitMsg(data) {
+  let elt = document.querySelector(".container");
+  elt.classList.add("blur");
+  let league = document.getElementById("league");
+  league.className = "hidden";
+  let season = document.getElementById("season");
+  season.className = "hidden";
+  let div = document.createElement("div");
+  div.className = "popup";
+  document.body.appendChild(div);
+  let time = data.min * 60;
+  setInterval(() => {
+    var minutes = Math.floor(time / 60);
+    var seconds = time % 60;
+    div.innerHTML = data.errorToDisplay + minutes + "m " + seconds + "s!";
+    if (time > 0) {
+      time--;
+    } else {
+      window.location.reload();
+    }
+  }, 1000);
+}
+
 function getLeague(data) {
   let arr = data.response;
   arr.sort((a, b) => {
@@ -50,53 +138,155 @@ function getLeague(data) {
     }
     return 0;
   });
+  let r5 = arr.map(obj => obj.league.id).indexOf(61);
+  let elt5 = arr.splice(r5, 1)[0];
+  arr.splice(0, 0, elt5);
+
+  let r4 = arr.map(obj => obj.league.id).indexOf(135);
+  let elt4 = arr.splice(r4, 1)[0];
+  arr.splice(0, 0, elt4);
+
+  let r3 = arr.map(obj => obj.league.id).indexOf(78);
+  let elt3 = arr.splice(r3, 1)[0];
+  arr.splice(0, 0, elt3);
+
+  let r2 = arr.map(obj => obj.league.id).indexOf(140);
+  let elt2 = arr.splice(r2, 1)[0];
+  arr.splice(0, 0, elt2);
+
+  let r1 = arr.map(obj => obj.league.id).indexOf(39);
+  let elt1 = arr.splice(r1, 1)[0];
+  arr.splice(0, 0, elt1);
+
+  let elt = document.getElementById("league");
+
+  let hr_first = document.createElement("hr");
+  elt.appendChild(hr_first);
+  let h4 = document.createElement("h4");
+  h4.innerHTML = "Top 5";
+  elt.appendChild(h4);
+
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i].league.type == "League") {
-      let option = document.createElement("option");
+    if (arr[i].league.type == "League" && arr[i].country.name != "World") {
+      if (i == 5) {
+        let hr = document.createElement("hr");
+        elt.appendChild(hr);
+        let h4 = document.createElement("h4");
+        h4.innerHTML = "Other";
+        elt.appendChild(h4);
+      }
+      let a = document.createElement("a");
+      let hr = document.createElement("hr");
       let id = arr[i].league.id;
       let name = arr[i].league.name;
+      let logo = arr[i].league.logo;
       let country = arr[i].country.name;
-      option.value = id;
-      option.innerText = country + " - " + name;
-      document.getElementById("league").appendChild(option);
+      let flag = arr[i].country.flag;
+      a.id = id;
+      a.innerHTML = `<img src="${flag}">` + `<sup>${country}</sup>` + `<img src="${logo}">` + `<sup>${name}</sup>`;
+      a.setAttribute("href", "#");
+      a.className = `${country}, ${name}`;
+      a.setAttribute("onclick", "onChangeLeague(this.id, this.className)");
+      elt.appendChild(hr);
+      elt.appendChild(a);
     }
   }
-  document.getElementById("league").onchange = onChangeLeague;
-  document.getElementById("season").onchange = onChangeSeason;
+  let hr_last = document.createElement("hr");
+  elt.appendChild(hr_last);
+  let width = document.querySelector(".league").offsetWidth;
+  elt.style.setProperty("--leagueWidth", width + "px");
 }
 
-function onChangeLeague() {
-  let id = document.getElementById("league").value;
+function onChangeLeague(id, info) {
   const endpoint2 = `leagues/${id}`;
   fetch(url + endpoint2)
     .then(response => response.json())
     .then(data => {
+      userLimit = checkUserLimit(data);
+      if (userLimit == 1) {
+        userLimitMsg(data);
+        return;
+      }
       limit = checkLimit(data);
       if (limit == 1) {
         if (!document.getElementById("limit")) {
           limitMsg();
         }
       } else {
-        if (!document.getElementsByClassName("hidden")[0]) {
-          let elt = document.getElementById("season");
-          while (elt.options.length > 0) {
-            elt.remove(0);
-          }
+        if (document.getElementById("season")) {
+          document.querySelectorAll("#season > a").forEach(a => {
+            a.remove();
+          });
+          document.querySelectorAll("#season > hr").forEach(hr => {
+            hr.remove();
+          });
         }
+        let seasonBtn = document.getElementById("seasonBtn");
+        let seasonContent = `Select a season
+                       <i class="${seasonHeadDown}"></i>`;
+        if (seasonBtn.innerHTML != seasonContent) {
+          seasonBtn.innerHTML = seasonContent;
+        }
+        let btn = document.getElementById("leagueBtn");
+        let content = `${info}
+                       <i class="${leagueHeadDown}"></i>`;
+        btn.innerHTML = content;
+        let elt = document.getElementById("league");
+        elt.className = "hidden";
+        let width = document.querySelector(".league").offsetWidth;
+        elt.style.setProperty("--leagueWidth", width + "px");
         getSeason(data);
+        let leagueId = document.querySelector(".leagueId");
+        if (leagueId) {
+          leagueId.remove();
+        }
+        let p = document.createElement("p");
+        document.body.appendChild(p);
+        p.innerHTML = id;
+        p.className = "hidden leagueId";
       }
     })
     .catch(error => alert(error));
 }
 
-function onChangeSeason() {
-  let elt = document.getElementById("league");
-  let id = elt.value;
-  let season = document.getElementById("season").value;
+function getSeason(data) {
+  let elt = document.getElementById("season");
+  for (let i = data.response[0].seasons.length - 1; i >= 0; i--) {
+    let hr = document.createElement("hr");
+    let a = document.createElement("a");
+    let start = data.response[0].seasons[i].year;
+    let t = data.response[0].seasons[i].end;
+    let end = t.substring(0, 4);
+    a.id = start;
+    if (start != end) {
+      a.innerHTML = start + " - " + end;
+    } else {
+      a.innerHTML = start;
+    }
+    a.setAttribute("href", "#");
+    a.setAttribute("onclick", "onChangeSeason(this.id, this.innerHTML)");
+    elt.appendChild(hr);
+    elt.appendChild(a);
+  }
+  let hr = document.createElement("hr");
+  elt.appendChild(hr);
+  document.getElementById("seasonBtn").removeAttribute("disabled");
+  let width = document.querySelector(".season").offsetWidth;
+  document.getElementById("season").style.setProperty("--seasonWidth", width + "px");
+}
+
+function onChangeSeason(season, fullSeason) {
+  let elt = document.querySelector("p");
+  let id = elt.innerHTML;
   const endpoint3 = `standings/${id}/${season}`;
   fetch(url + endpoint3)
     .then(response => response.json())
     .then(data => {
+      userLimit = checkUserLimit(data);
+      if (userLimit == 1) {
+        userLimitMsg(data);
+        return;
+      }
       limit = checkLimit(data);
       if (limit == 1) {
         if (!document.getElementById("limit")) {
@@ -113,37 +303,19 @@ function onChangeSeason() {
             team.remove();
           }
         }
-        console.log(currentLength);
+        let btn = document.getElementById("seasonBtn");
+        let content = `${fullSeason}
+                       <i class="${seasonHeadDown}"></i>`
+        btn.innerHTML = content;
+        let elt = document.getElementById("season");
+        elt.className = "hidden";
+        let width = document.querySelector(".season").offsetWidth;
+        elt.style.setProperty("--seasonWidth", width + "px");
         let length = data.response[0].league.standings.length;
         getTable(data, length - 1);
       }
     })
     .catch(error => alert(error));
-}
-
-function getSeason(data) {
-  let elt = document.getElementById("season");
-  let option = document.createElement("option");
-  option.innerText = "Select a season: ";
-  option.setAttribute("selected", "selected");
-  option.setAttribute("disabled", "disabled");
-  elt.appendChild(option);
-  for (let i = 0; i < data.response[0].seasons.length; i++) {
-    let option = document.createElement("option");
-    let start = data.response[0].seasons[i].year;
-    let t = data.response[0].seasons[i].end;
-    let end = t.substring(0, 4);
-    option.value = start;
-    if (start != end) {
-      option.innerText = start + " - " + end;
-    } else {
-      option.innerText = start;
-    }
-    elt.appendChild(option);
-  }
-  if (document.getElementsByClassName("hidden")[0]) {
-    document.getElementsByClassName("hidden")[0].className = "season";
-  }
 }
 
 function getTable(data, k) {
@@ -159,20 +331,9 @@ function getTable(data, k) {
     }
     if (!document.getElementById(promotion)) {
       let elt = document.createElement("tr");
-      let content = `<th></th>
-                     <th></th>
-                     <th></th>
+      let content = `<th colspan="3"></th>
                      <th>Promotion</th>
-                     <th></th>
-                     <th></th>
-                     <th></th>
-                     <th></th>
-                     <th></th>
-                     <th></th>
-                     <th></th>
-                     <th></th>
-                     <th></th>
-                     <th></th>`;
+                     <th colspan="10"></th>`;
       let t = promotion;
       if (t.includes("Promotion - ")) {
         t = t.replace("Promotion - ", "");
@@ -234,20 +395,17 @@ function createStructure() {
     return;
   }
   let structure = document.createElement("tr");
-  let content = `<td id="rank"></td>
-                   <td id="status"></td>
-                   <td id="logo"></td>
-                   <td id="name"></td>
-                   <td class="info" id="right">MP</td>
-                   <td class="info" id="right">W</td>
-                   <td class="info" id="right">D</td>
-                   <td class="info" id="right">L</td>
-                   <td class="info" id="right">GF</td>
-                   <td class="info" id="colon">:</td>
-                   <td class="info" id="left">GA</td>
-                   <td class="info" id="left">GD</td>
-                   <td class="info" id="left">PTS</td>
-                   <td class="info2" id="left">LAST 5</td>`;
+  let content = `<td colspan="4"></td>
+                 <td class="info" id="right">MP</td>
+                 <td class="info" id="right">W</td>
+                 <td class="info" id="right">D</td>
+                 <td class="info" id="right">L</td>
+                 <td class="info" id="right">GF</td>
+                 <td class="info" id="colon">:</td>
+                 <td class="info" id="left">GA</td>
+                 <td class="info" id="left">GD</td>
+                 <td class="info" id="left">PTS</td>
+                 <td class="info2" id="left">LAST 5</td>`;
   structure.id = "structure";
   structure.innerHTML = content;
   document.getElementById("standings").appendChild(structure);

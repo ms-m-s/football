@@ -1,6 +1,6 @@
 body {
-  color: rgb(243, 237, 237);
-  background-color: rgb(33, 32, 32);
+  color: rgb(227, 225, 225);
+  background: rgb(33, 32, 32);
   margin-inline: auto;
 }
 
@@ -8,6 +8,17 @@ h1 {
   text-align: center;
   letter-spacing: 2px;
   word-spacing: 6px;
+  text-shadow: 0px 0px 8px rgb(34, 116, 47);
+}
+
+h4 {
+  text-align: center;
+  word-spacing: 2px;
+  color: rgb(33, 32, 32);
+}
+
+div:not(.container) {
+  color: rgb(33, 32, 32);
 }
 
 .hidden {
@@ -23,20 +34,133 @@ h1 {
   display: inline-block;
 }
 
-#league,
-#season {
-  color: rgb(33, 32, 32);
-  background-color: rgb(243, 237, 237);
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
 .league {
-  padding-left: 5px;
+  margin-left: 5px;
+  padding: 0;
+  border: none;
 }
 
 .season {
-  padding-left: 30px;
+  margin-left: 10vw;
+  padding: 0;
+}
+
+#league,
+#season,
+button {
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: rgb(227, 225, 225);
+  color: rgb(33, 32, 32);
+}
+
+button {
+  cursor: pointer;
+  background: rgb(34, 116, 47);
+  color: rgb(227, 225, 225);
+}
+
+button:disabled,
+button[disabled] {
+  cursor: default;
+  background: silver;
+}
+
+.leagueArrowhead,
+.seasonArrowhead {
+  font-size: 12px;
+}
+
+.leagueArrowhead {
+  margin-left: 230px;
+}
+
+.seasonArrowhead {
+  margin-left: 24px;
+}
+
+#league {
+  width: var(--leagueWidth);
+}
+
+#season {
+  width: var(--seasonWidth);
+}
+
+.leagueOnClick {
+  display: none;
+}
+
+.seasonOnClick {
+  display: none;
+}
+
+.leagueOnClick,
+.seasonOnClick {
+  height: 50vh;
+  display: block;
+  position: absolute;
+  overflow: auto;
+}
+
+.seasonOnClick {
+  text-align: center;
+}
+
+#league::-webkit-scrollbar,
+#season::-webkit-scrollbar {
+  width: 12px;
+}
+
+#league::-webkit-scrollbar-thumb,
+#season::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgb(70, 69, 69);
+}
+
+#league::-webkit-scrollbar-track,
+#season::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background: rgb(227, 225, 225);
+  border: 1px solid #cacaca;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(227, 225, 225);
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(33, 32, 32);
+  border: 1px solid #cacaca;
+}
+
+a {
+  display: block;
+  text-decoration: none;
+  padding-left: 4px;
+  padding-right: 4px;
+  cursor: pointer;
+  color: rgb(33, 32, 32);
+  background: rgb(227, 225, 225);
+}
+
+a:hover {
+  background: rgb(210, 207, 207);
+}
+
+#league a img {
+  width: 26px;
+  height: 26px;
+}
+
+#league a sup {
+  padding-left: 4px;
+  padding-right: 8px;
 }
 
 #standings {
@@ -65,7 +189,7 @@ img {
 }
 
 #name {
-  width: 400px;
+  width: 350px;
   text-align: left;
 }
 
@@ -77,6 +201,7 @@ img {
 .info2 {
   width: max-content;
   white-space: nowrap;
+  word-spacing: 4px;
 }
 
 #right {
@@ -124,7 +249,7 @@ img {
 }
 
 .promotion {
-  background-color: black;
+  background: black;
 }
 
 #limit {
@@ -135,6 +260,23 @@ img {
   align-items: center;
   justify-content: center;
   height: 72vh;
+}
+
+.blur {
+  filter: blur(10px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border: none;
+  border-radius: 9999px;
+  background: yellow;
 }
 
 @media (max-width: 680px) {
@@ -156,6 +298,19 @@ img {
   }
 }
 
+@media (max-width: 575px) {
+  .league,
+  .season {
+    display: block;
+    width: fit-content;
+  }
+
+  .season {
+    margin-left: 5px;
+    margin-top: 10px;
+  }
+}
+
 @media (max-width: 435px) {
   html {
     font-size: 10px;
@@ -167,14 +322,9 @@ img {
     word-spacing: 3px;
   }
 
-  .league,
-  .season {
-    display: block;
-  }
-
-  .season {
-    padding-left: 5px;
-    padding-top: 10px;
+  #league a img {
+    width: 20px;
+    height: 20px;
   }
 
   .promotion {

@@ -5,26 +5,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
     <title>Standings</title>
     <link rel="icon" href="https://cdn.pixabay.com/photo/2018/09/30/22/12/silhouette-3714836_1280.png">
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1><u>Football League's Standings</u></h1>
+    <h1>Football League's Standings</h1>
     <br>
     <div class="container">
         <div class="league">
-            <select id="league">
-                <option selected="true" disabled="true">Select a league: </option>
-            </select>
+            <button id="leagueBtn">
+                Select a league
+                <i class="fa fa-sharp fa-solid fa-angle-down leagueArrowhead"></i>
+            </button>
+            <div id="league" class="hidden">
+            </div>
         </div>
-        <div class="hidden">
-            <select id="season"></select>
+        <div class="season">
+            <button id="seasonBtn" disabled>
+                Select a season
+                <i class="fa fa-sharp fa-solid fa-angle-down seasonArrowhead"></i>
+            </button>
+            <div id="season" class="hidden">
+            </div>
         </div>
         <table id="standings" rules="rows">
         </table>
     </div>
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+            data-id="ms1001" data-description="Support me on Buy me a coffee!" data-message="" data-color="rgb(34, 116, 47)"
+            data-position="Right" data-x_margin="18" data-y_margin="18">
+    </script>
     <script type="text/javascript" src="script.js"></script>
 </body>
 
